@@ -9,7 +9,7 @@ pipeline {
     PROJECT_TESTING    = 'devopssqa113-g1-testing'
     PROJECT_STAGING    = 'devopssqa113-g1-staging'
     PROJECT_PRODUCTION = 'devopssqa113-g1-production'
-    FIREBASE_TOKEN     = credentials('FIREBASE_TOKEN')
+    FIREBASE_TOKEN     = credentials('firebase-token')
   }
 
   stages {
