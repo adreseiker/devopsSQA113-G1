@@ -9,6 +9,8 @@ pipeline {
     PROJECT_TESTING    = 'devopsSQA113-G1-Testing'
     PROJECT_STAGING    = 'devopsSQA113-G1-Staging'
     PROJECT_PRODUCTION = 'devopsSQA113-G1-Production'
+    // Token incrustado (solo para pruebas)
+    FIREBASE_TOKEN     = '1//06ZRRY-gjmfl5CgYIARAAGAYSNwF-L9Irh3bHhjqS7x76tIAgDG8sE3i1x0woNUF2Pu-Ja9ZGFcuCUJrxBRt9oMAyT0OSbBDK5j4'
   }
 
   stages {
@@ -38,15 +40,11 @@ pipeline {
     stage('Testing') {
       steps {
         ansiColor('xterm') {
-          withCredentials([string(credentialsId: 'FIREBASE_TOKEN', variable: 'FIREBASE_TOKEN')]) {
-            sh '''
-              set -e
-              echo "Deploying to TESTING: $PROJECT_TESTING"
-              firebase deploy --only hosting --project "$PROJECT_TESTING"
-              # Si Jenkins no toma el token automáticamente, usa:
-              # firebase deploy --token "$FIREBASE_TOKEN" --only hosting --project "$PROJECT_TESTING"
-            '''
-          }
+          sh '''
+            set -e
+            echo "Deploying to TESTING: $PROJECT_TESTING"
+            firebase deploy --token "$FIREBASE_TOKEN" --only hosting --project "$PROJECT_TESTING"
+          '''
         }
       }
     }
@@ -54,14 +52,11 @@ pipeline {
     stage('Staging') {
       steps {
         ansiColor('xterm') {
-          withCredentials([string(credentialsId: 'FIREBASE_TOKEN', variable: 'FIREBASE_TOKEN')]) {
-            sh '''
-              set -e
-              echo "Deploying to STAGING: $PROJECT_STAGING"
-              firebase deploy --only hosting --project "$PROJECT_STAGING"
-              # firebase deploy --token "$FIREBASE_TOKEN" --only hosting --project "$PROJECT_STAGING"
-            '''
-          }
+          sh '''
+            set -e
+            echo "Deploying to STAGING: $PROJECT_STAGING"
+            firebase deploy --token "$FIREBASE_TOKEN" --only hosting --project "$PROJECT_STAGING"
+          '''
         }
       }
     }
@@ -70,14 +65,11 @@ pipeline {
       when { branch 'main' }
       steps {
         ansiColor('xterm') {
-          withCredentials([string(credentialsId: 'FIREBASE_TOKEN', variable: 'FIREBASE_TOKEN')]) {
-            sh '''
-              set -e
-              echo "Deploying to PRODUCTION: $PROJECT_PRODUCTION"
-              firebase deploy --only hosting --project "$PROJECT_PRODUCTION"
-              # firebase deploy --token "$FIREBASE_TOKEN" --only hosting --project "$PROJECT_PRODUCTION"
-            '''
-          }
+          sh '''
+            set -e
+            echo "Deploying to PRODUCTION: $PROJECT_PRODUCTION"
+            firebase deploy --token "$FIREBASE_TOKEN" --only hosting --project "$PROJECT_PRODUCTION"
+          '''
         }
       }
     }
@@ -88,4 +80,3 @@ pipeline {
     failure { echo '❌ Pipeline failed. Check logs above.' }
   }
 }
-
