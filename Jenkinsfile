@@ -3,7 +3,6 @@ pipeline {
 
   options {
     timestamps()
-    wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm'])
   }
 
   environment {
@@ -15,48 +14,54 @@ pipeline {
   stages {
     stage('Build – Install Firebase Tools') {
       steps {
-        sh '''
-          set -e
-          echo "Node version:" && node -v || true
-          echo "NPM version:" && npm -v || true
-          echo "Installing Firebase CLI..."
-          npm install -g firebase-tools
-          echo "Firebase CLI version:"
-          firebase --version
-          if [ -f package.json ]; then
-            echo "package.json found. Installing project deps..."
-            npm ci || npm install
-            # npm run build
-          else
-            echo "No package.json. Skipping npm install."
-          fi
-        '''
+        ansiColor('xterm') {
+          sh '''
+            set -e
+            echo "Node version:" && node -v || true
+            echo "NPM version:" && npm -v || true
+            echo "Installing Firebase CLI..."
+            npm install -g firebase-tools
+            echo "Firebase CLI version:"
+            firebase --version
+            if [ -f package.json ]; then
+              echo "package.json found. Installing project deps..."
+              npm ci || npm install
+              # npm run build
+            else
+              echo "No package.json. Skipping npm install."
+            fi
+          '''
+        }
       }
     }
 
     stage('Testing') {
       steps {
-        withCredentials([string(credentialsId: 'FIREBASE_TOKEN', variable: 'FIREBASE_TOKEN')]) {
-          sh '''
-            set -e
-            echo "Deploying to TESTING: $PROJECT_TESTING"
-            firebase deploy --only hosting --project "$PROJECT_TESTING"
-            # Si Jenkins no toma el token automáticamente, usa:
-            # firebase deploy --token "$FIREBASE_TOKEN" --only hosting --project "$PROJECT_TESTING"
-          '''
+        ansiColor('xterm') {
+          withCredentials([string(credentialsId: 'FIREBASE_TOKEN', variable: 'FIREBASE_TOKEN')]) {
+            sh '''
+              set -e
+              echo "Deploying to TESTING: $PROJECT_TESTING"
+              firebase deploy --only hosting --project "$PROJECT_TESTING"
+              # Si Jenkins no toma el token automáticamente, usa:
+              # firebase deploy --token "$FIREBASE_TOKEN" --only hosting --project "$PROJECT_TESTING"
+            '''
+          }
         }
       }
     }
 
     stage('Staging') {
       steps {
-        withCredentials([string(credentialsId: 'FIREBASE_TOKEN', variable: 'FIREBASE_TOKEN')]) {
-          sh '''
-            set -e
-            echo "Deploying to STAGING: $PROJECT_STAGING"
-            firebase deploy --only hosting --project "$PROJECT_STAGING"
-            # firebase deploy --token "$FIREBASE_TOKEN" --only hosting --project "$PROJECT_STAGING"
-          '''
+        ansiColor('xterm') {
+          withCredentials([string(credentialsId: 'FIREBASE_TOKEN', variable: 'FIREBASE_TOKEN')]) {
+            sh '''
+              set -e
+              echo "Deploying to STAGING: $PROJECT_STAGING"
+              firebase deploy --only hosting --project "$PROJECT_STAGING"
+              # firebase deploy --token "$FIREBASE_TOKEN" --only hosting --project "$PROJECT_STAGING"
+            '''
+          }
         }
       }
     }
@@ -64,13 +69,15 @@ pipeline {
     stage('Production') {
       when { branch 'main' }
       steps {
-        withCredentials([string(credentialsId: 'FIREBASE_TOKEN', variable: 'FIREBASE_TOKEN')]) {
-          sh '''
-            set -e
-            echo "Deploying to PRODUCTION: $PROJECT_PRODUCTION"
-            firebase deploy --only hosting --project "$PROJECT_PRODUCTION"
-            # firebase deploy --token "$FIREBASE_TOKEN" --only hosting --project "$PROJECT_PRODUCTION"
-          '''
+        ansiColor('xterm') {
+          withCredentials([string(credentialsId: 'FIREBASE_TOKEN', variable: 'FIREBASE_TOKEN')]) {
+            sh '''
+              set -e
+              echo "Deploying to PRODUCTION: $PROJECT_PRODUCTION"
+              firebase deploy --only hosting --project "$PROJECT_PRODUCTION"
+              # firebase deploy --token "$FIREBASE_TOKEN" --only hosting --project "$PROJECT_PRODUCTION"
+            '''
+          }
         }
       }
     }
@@ -81,3 +88,4 @@ pipeline {
     failure { echo '❌ Pipeline failed. Check logs above.' }
   }
 }
+
