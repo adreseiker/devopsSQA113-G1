@@ -60,7 +60,9 @@ pipeline {
     }
 
     stage('Production') {
-      when { branch 'main' }
+      when {
+        expression { env.BRANCH_NAME == 'main' || env.GIT_BRANCH == 'origin/main' || env.GIT_BRANCH == 'main' }
+      }
       steps {
         ansiColor('xterm') {
           sh '''
