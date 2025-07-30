@@ -41,7 +41,7 @@ pipeline {
           sh '''
             set -e
             echo "Deploying to TESTING: $PROJECT_TESTING"
-            firebase deploy --token "$FIREBASE_TOKEN" --only hosting --project "$PROJECT_TESTING"
+            firebase deploy --token "$FIREBASE_TOKEN" --only hosting:testing --project "$PROJECT_TESTING"
           '''
         }
       }
@@ -53,7 +53,7 @@ pipeline {
           sh '''
             set -e
             echo "Deploying to STAGING: $PROJECT_STAGING"
-            firebase deploy --token "$FIREBASE_TOKEN" --only hosting --project "$PROJECT_STAGING"
+            firebase deploy --token "$FIREBASE_TOKEN" --only hosting:staging --project "$PROJECT_STAGING"
           '''
         }
       }
@@ -66,7 +66,7 @@ pipeline {
           sh '''
             set -e
             echo "Deploying to PRODUCTION: $PROJECT_PRODUCTION"
-            firebase deploy --token "$FIREBASE_TOKEN" --only hosting --project "$PROJECT_PRODUCTION"
+            firebase deploy --token "$FIREBASE_TOKEN" --only hosting:production --project "$PROJECT_PRODUCTION"
           '''
         }
       }
