@@ -3,7 +3,7 @@ pipeline {
 
   options {
     timestamps()
-    ansiColor('xterm')
+    wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm'])
   }
 
   environment {
@@ -41,6 +41,8 @@ pipeline {
             set -e
             echo "Deploying to TESTING: $PROJECT_TESTING"
             firebase deploy --only hosting --project "$PROJECT_TESTING"
+            # Si Jenkins no toma el token automáticamente, usa:
+            # firebase deploy --token "$FIREBASE_TOKEN" --only hosting --project "$PROJECT_TESTING"
           '''
         }
       }
@@ -53,6 +55,7 @@ pipeline {
             set -e
             echo "Deploying to STAGING: $PROJECT_STAGING"
             firebase deploy --only hosting --project "$PROJECT_STAGING"
+            # firebase deploy --token "$FIREBASE_TOKEN" --only hosting --project "$PROJECT_STAGING"
           '''
         }
       }
@@ -66,6 +69,7 @@ pipeline {
             set -e
             echo "Deploying to PRODUCTION: $PROJECT_PRODUCTION"
             firebase deploy --only hosting --project "$PROJECT_PRODUCTION"
+            # firebase deploy --token "$FIREBASE_TOKEN" --only hosting --project "$PROJECT_PRODUCTION"
           '''
         }
       }
