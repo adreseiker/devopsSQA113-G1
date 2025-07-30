@@ -1,0 +1,12 @@
+{
+  "projects": {
+    "testing": "devopssqa113-g1-testing",
+    "staging": "devopssqa113-g1-staging",
+    "production": "devopssqa113-g1-production"
+  },
+  "targets": {
+    "devopssqa113-g1-testing":    { "hosting": { "testing":    ["devopssqa113-g1-testing"] } },
+    "devopssqa113-g1-staging":    { "hosting": { "staging":    ["devopssqa113-g1-staging"] } },
+    "devopssqa113-g1-production": { "hosting": { "production": ["devopssqa113-g1-production"] } }
+  }
+}
