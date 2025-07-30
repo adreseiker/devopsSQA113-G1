@@ -6,11 +6,10 @@ pipeline {
   }
 
   environment {
-    PROJECT_TESTING    = 'devopsSQA113-G1-Testing'
-    PROJECT_STAGING    = 'devopsSQA113-G1-Staging'
-    PROJECT_PRODUCTION = 'devopsSQA113-G1-Production'
-    // Token incrustado (solo para pruebas)
-    FIREBASE_TOKEN     = '1//06ZRRY-gjmfl5CgYIARAAGAYSNwF-L9Irh3bHhjqS7x76tIAgDG8sE3i1x0woNUF2Pu-Ja9ZGFcuCUJrxBRt9oMAyT0OSbBDK5j4'
+    PROJECT_TESTING    = 'devopssqa113-g1-testing'
+    PROJECT_STAGING    = 'devopssqa113-g1-staging'
+    PROJECT_PRODUCTION = 'devopssqa113-g1-production'
+    FIREBASE_TOKEN     = credentials('FIREBASE_TOKEN')
   }
 
   stages {
@@ -28,7 +27,6 @@ pipeline {
             if [ -f package.json ]; then
               echo "package.json found. Installing project deps..."
               npm ci || npm install
-              # npm run build
             else
               echo "No package.json. Skipping npm install."
             fi
